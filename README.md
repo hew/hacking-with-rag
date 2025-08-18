@@ -1,6 +1,6 @@
 # Advanced RAG Demo 🚀
 
-[![CI](https://github.com/yourusername/advanced-rag-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/advanced-rag-demo/actions/workflows/ci.yml)
+[![CI](https://github.com/hew/advanced-rag-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/hew/advanced-rag-demo/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
@@ -49,7 +49,7 @@ A cutting-edge demonstration of Retrieval-Augmented Generation showcasing the la
 
 ```bash
 # Clone and install
-git clone https://github.com/yourusername/advanced-rag-demo.git
+git clone https://github.com/hew/advanced-rag-demo.git
 cd advanced-rag-demo
 npm install
 
