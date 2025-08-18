@@ -32,7 +32,7 @@ jobs:
     - name: Run tests in mock mode
       env:
         MOCK_MODE: true
-      run: npm test -- --run 2>/dev/null || echo "Tests will be added"
+      run: npm test -- --run
     
     - name: Build
       run: npm run build
@@ -41,10 +41,10 @@ jobs:
       env:
         MOCK_MODE: true
       run: |
-        timeout 10s npm run dev &
+        npm run dev &
         SERVER_PID=$!
         sleep 5
-        curl -f http://localhost:3000/health || exit 1
+        curl -f http://localhost:3000/health
         kill $SERVER_PID || true
 
   lint:
