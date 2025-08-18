@@ -63,36 +63,36 @@ open http://localhost:3000
 ### Production Installation
 
 1. Clone the repository:
-\`\`\`bash
-git clone <repository-url>
-cd rag-example
-\`\`\`
+```bash
+git clone https://github.com/hew/advanced-rag-demo.git
+cd advanced-rag-demo
+```
 
 2. Install dependencies:
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 3. Configure environment:
-\`\`\`bash
+```bash
 cp .env.example .env
 # Edit .env with your API keys
-\`\`\`
+```
 
 4. Start Qdrant locally (optional):
-\`\`\`bash
+```bash
 docker run -p 6333:6333 qdrant/qdrant
-\`\`\`
+```
 
 5. Ingest sample documents:
-\`\`\`bash
+```bash
 npm run ingest
-\`\`\`
+```
 
 6. Start the server:
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
 7. Open browser:
 Navigate to `http://localhost:3000`
@@ -100,32 +100,32 @@ Navigate to `http://localhost:3000`
 ## API Endpoints
 
 ### Standard Query
-\`\`\`bash
+```bash
 POST /api/query
 {
   "question": "Your question here",
   "useReranking": true,
   "useHybridSearch": true
 }
-\`\`\`
+```
 
 ### Streaming Query
-\`\`\`bash
+```bash
 POST /api/query/stream
 # Returns Server-Sent Events stream
-\`\`\`
+```
 
 ### Configuration Comparison
-\`\`\`bash
+```bash
 POST /api/compare
 {
   "question": "Your question here"
 }
-\`\`\`
+```
 
 ## Architecture
 
-\`\`\`
+```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
 │   User      │────▶│   API        │────▶│  RAG        │
 │   Query     │     │   Server     │     │  Pipeline   │
@@ -144,7 +144,7 @@ POST /api/compare
              │   Vector     │ │   Keyword    │
              │   Search     │ │   Search     │
              └──────────────┘ └──────────────┘
-\`\`\`
+```
 
 ## Configuration
 
@@ -178,7 +178,7 @@ The demo includes three comprehensive technical documents:
 
 ## Development
 
-\`\`\`bash
+```bash
 # Run in development mode
 npm run dev
 
@@ -187,7 +187,7 @@ npm run build
 
 # Run tests
 npm test
-\`\`\`
+```
 
 ## 🤝 Contributing
 
