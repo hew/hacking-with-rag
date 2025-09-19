@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Advanced RAG Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -144,8 +145,73 @@
     }
 
     .answer {
-      line-height: 1.6;
+      line-height: 1.8;
       color: #333;
+      font-size: 1.05rem;
+    }
+
+    .answer p {
+      margin-bottom: 1em;
+    }
+
+    .answer ul, .answer ol {
+      margin: 1em 0;
+      padding-left: 2em;
+    }
+
+    .answer li {
+      margin-bottom: 0.5em;
+    }
+
+    .answer code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+
+    .answer pre {
+      background: #f4f4f4;
+      padding: 1em;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 1em 0;
+    }
+
+    .answer h1, .answer h2, .answer h3, .answer h4 {
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+      color: #2c3e50;
+    }
+
+    .answer blockquote {
+      border-left: 4px solid #667eea;
+      padding-left: 1em;
+      margin: 1em 0;
+      color: #666;
+    }
+
+    .answer strong {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .answer em {
+      font-style: italic;
+    }
+
+    .citation {
+      color: #667eea;
+      cursor: pointer;
+      font-weight: 600;
+      margin-left: 2px;
+      transition: color 0.2s;
+    }
+
+    .citation:hover {
+      color: #764ba2;
+      text-decoration: underline;
     }
 
     .sources {
@@ -276,6 +342,27 @@
   </div>
 
   <script>
+    // Configure marked options
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      headerIds: false,
+      mangle: false
+    });
+
+    // Function to process citations in text
+    function processCitations(text) {
+      // Replace [1], [2], etc. with styled spans
+      return text.replace(/\[(\d+)\]/g, '<sup class="citation" data-ref="$1">[$1]</sup>');
+    }
+
+    // Function to render markdown with citations
+    function renderMarkdownWithCitations(text) {
+      // First render markdown
+      let html = marked.parse(text || '');
+      // Then process citations
+      return processCitations(html);
+    }
     async function submitQuery() {
       const question = document.getElementById('questionInput').value;
       const useHybrid = document.getElementById('useHybrid').checked;
@@ -347,9 +434,12 @@
                   hideLoading();
                   resultContent.innerHTML = '<div class="result-section"><h3>Answer <span class="stream-indicator"></span></h3><div class="answer" id="streamAnswer"></div></div>';
                   answerDiv = document.getElementById('streamAnswer');
+                  answerDiv.rawContent = '';
                 }
                 if (data.chunk) {
-                  answerDiv.textContent += data.chunk;
+                  answerDiv.rawContent = (answerDiv.rawContent || '') + data.chunk;
+                  // Parse and render markdown with citations
+                  answerDiv.innerHTML = renderMarkdownWithCitations(answerDiv.rawContent);
                 }
               } else if (data.type === 'complete' && data.data) {
                 sources = data.data.sources;
@@ -392,7 +482,7 @@
       resultContent.innerHTML = `
         <div class="result-section">
           <h3>Answer</h3>
-          <div class="answer">${data.answer}</div>
+          <div class="answer">${renderMarkdownWithCitations(data.answer || '')}</div>
         </div>
         
         <div class="result-section">

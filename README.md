@@ -5,205 +5,296 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 
-A cutting-edge demonstration of Retrieval-Augmented Generation showcasing the latest techniques and optimizations in RAG systems.
+A production-ready Retrieval-Augmented Generation (RAG) system demonstrating cutting-edge techniques for semantic search, document retrieval, and AI-powered question answering.
 
-## 🎯 Live Demo
+## ✨ What's New
 
-**Try it without API keys!** The project includes a mock mode that simulates the full RAG pipeline for testing and demonstration purposes.
+- **Enhanced UI**: Proper markdown rendering with syntax highlighting and formatted citations
+- **Flexible Document Ingestion**: Support for PDF, Markdown, JSON, CSV, and HTML files
+- **Improved Relevance**: Hybrid search combining vector and keyword matching
+- **Real Document Support**: Ingest your own documents or use high-quality samples
+- **Production Ready**: Docker Compose setup, health checks, and monitoring tools
 
-## Features
+## 🎯 Live Features
 
 ### Core RAG Capabilities
-- **Hybrid Search**: Combines vector similarity and keyword matching for optimal retrieval
-- **Query Expansion**: Automatically expands queries with related terms for better coverage
-- **Cross-Encoder Reranking**: Uses Cohere's reranking models for improved relevance
-- **Adaptive Chunking**: Intelligently chunks documents based on content type
-- **Streaming Responses**: Real-time streaming with citations and progress indicators
+- **Hybrid Search**: Combines vector similarity and keyword matching (configurable alpha)
+- **Query Expansion**: Automatically expands queries for comprehensive coverage
+- **Cross-Encoder Reranking**: Cohere's reranking for 40-50% better precision
+- **Adaptive Chunking**: Smart document splitting with configurable size and overlap
+- **Streaming Responses**: Real-time streaming with live markdown rendering
 
 ### Advanced Features
-- **Reciprocal Rank Fusion**: Sophisticated result merging from multiple search strategies
-- **Multi-modal Embeddings**: Enhanced embeddings with metadata incorporation
-- **Performance Metrics**: Detailed timing for retrieval, reranking, and generation phases
-- **Configuration Comparison**: Compare different RAG configurations side-by-side
+- **Multiple Data Sources**: Ingest from local files, URLs, or use sample data
+- **Performance Metrics**: Detailed timing for retrieval, reranking, and generation
+- **Configuration Comparison**: Side-by-side testing of different RAG configurations
+- **Citation Tracking**: Automatic source attribution with relevance scores
+- **Qdrant Dashboard**: Visual exploration of vector embeddings at http://localhost:6333/dashboard
 
-## Tech Stack
+## 🛠 Tech Stack
 
-- **LLM**: OpenAI GPT-4 Turbo
-- **Embeddings**: OpenAI text-embedding-3-large
-- **Vector Store**: Qdrant (local or cloud)
-- **Reranking**: Cohere Rerank v3
-- **Framework**: LangChain
-- **Runtime**: Node.js with TypeScript
-- **API**: Express.js
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **LLM** | OpenAI GPT-4 Turbo | Answer generation |
+| **Embeddings** | OpenAI text-embedding-3 | Semantic search |
+| **Vector Database** | Qdrant | Vector storage & retrieval |
+| **Reranking** | Cohere Rerank v3 | Result refinement |
+| **Framework** | LangChain | RAG pipeline orchestration |
+| **Backend** | Node.js + TypeScript | Server implementation |
+| **Frontend** | Vanilla JS + Marked.js | Interactive UI |
 
-## Quick Start
+## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 18+
-- Qdrant (optional - only for production mode)
-- API Keys (optional - only for production mode):
-  - OpenAI API Key
-  - Cohere API Key
-
-### 🚀 Quick Start (Mock Mode - No API Keys Required!)
+### Option 1: Full Setup with Real Data (Recommended)
 
 ```bash
-# Clone and install
+# Clone repository
 git clone https://github.com/hew/advanced-rag-demo.git
 cd advanced-rag-demo
+
+# Install dependencies
 npm install
 
-# Run in mock mode (no API keys needed!)
-MOCK_MODE=true npm run dev
+# Start Qdrant with Docker
+npm run qdrant:setup
+# Or manually: docker-compose up -d qdrant
+
+# Configure API keys
+cp .env.example .env
+# Edit .env with your OpenAI and Cohere API keys
+
+# Ingest documents
+npm run ingest:files  # Your documents from ./documents/
+# Or use samples: npm run ingest:sample
+
+# Start the server
+npm run dev
 
 # Open browser
 open http://localhost:3000
 ```
 
-### Production Installation
+### Option 2: Mock Mode (No API Keys Required)
 
-1. Clone the repository:
 ```bash
-git clone https://github.com/hew/advanced-rag-demo.git
-cd advanced-rag-demo
+# Quick test without setup
+MOCK_MODE=true npm run dev
 ```
 
-2. Install dependencies:
+## 📁 Document Ingestion
+
+### Supported Formats
+- **Text**: `.txt`, `.md`, `.markdown`
+- **Documents**: `.pdf` (via pdf-parse)
+- **Data**: `.json`, `.csv`
+- **Web**: `.html`, `.htm`
+
+### Adding Your Documents
+
 ```bash
-npm install
+# Add documents to the folder
+cp your-files/* documents/
+
+# Ingest them
+npm run ingest:files
+
+# Check status
+npm run qdrant:check
 ```
 
-3. Configure environment:
-```bash
-cp .env.example .env
-# Edit .env with your API keys
+### Sample Documents Included
+- Frontend Performance Optimization Guide
+- Modern JavaScript Development Guide
+- React & Next.js Performance Guide
+- Node.js Best Practices
+- Microservices Architecture
+- Machine Learning in Production
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```env
+# Required
+OPENAI_API_KEY=sk-...
+
+# Optional but recommended
+COHERE_API_KEY=...
+
+# Vector Database (choose one)
+QDRANT_URL=http://localhost:6333  # Local Docker
+# QDRANT_URL=https://xxx.qdrant.io # Cloud
+# QDRANT_API_KEY=...               # For cloud
+
+# RAG Parameters
+CHUNK_SIZE=512
+CHUNK_OVERLAP=128
+TOP_K=10
+RERANK_TOP_K=3
+HYBRID_SEARCH_ALPHA=0.5  # 0=keyword, 1=vector
 ```
 
-4. Start Qdrant locally (optional):
+## 📊 API Endpoints
+
+### Query Endpoints
+
 ```bash
-docker run -p 6333:6333 qdrant/qdrant
-```
-
-5. Ingest sample documents:
-```bash
-npm run ingest
-```
-
-6. Start the server:
-```bash
-npm run dev
-```
-
-7. Open browser:
-Navigate to `http://localhost:3000`
-
-## API Endpoints
-
-### Standard Query
-```bash
+# Standard query
 POST /api/query
 {
-  "question": "Your question here",
+  "question": "What are Core Web Vitals?",
   "useReranking": true,
   "useHybridSearch": true
 }
-```
 
-### Streaming Query
-```bash
+# Streaming query (Server-Sent Events)
 POST /api/query/stream
-# Returns Server-Sent Events stream
-```
 
-### Configuration Comparison
-```bash
+# Compare configurations
 POST /api/compare
 {
-  "question": "Your question here"
+  "question": "How to optimize React performance?"
 }
 ```
 
-## Architecture
+## 🐳 Docker & Deployment
 
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   User      │────▶│   API        │────▶│  RAG        │
-│   Query     │     │   Server     │     │  Pipeline   │
-└─────────────┘     └──────────────┘     └─────────────┘
-                                               │
-                           ┌───────────────────┼───────────────────┐
-                           ▼                   ▼                   ▼
-                    ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-                    │   Hybrid     │   │   Reranker   │   │     LLM      │
-                    │   Search     │   │   (Cohere)   │   │   (OpenAI)   │
-                    └──────────────┘   └──────────────┘   └──────────────┘
-                           │
-                    ┌──────┴──────┐
-                    ▼             ▼
-             ┌──────────────┐ ┌──────────────┐
-             │   Vector     │ │   Keyword    │
-             │   Search     │ │   Search     │
-             └──────────────┘ └──────────────┘
-```
-
-## Configuration
-
-### Environment Variables
-- `OPENAI_API_KEY`: OpenAI API key
-- `COHERE_API_KEY`: Cohere API key for reranking
-- `QDRANT_URL`: Qdrant instance URL
-- `QDRANT_API_KEY`: Qdrant API key (if using cloud)
-
-### RAG Parameters
-- `CHUNK_SIZE`: Document chunk size (default: 512)
-- `CHUNK_OVERLAP`: Overlap between chunks (default: 128)
-- `TOP_K`: Number of documents to retrieve (default: 10)
-- `RERANK_TOP_K`: Documents after reranking (default: 3)
-- `HYBRID_SEARCH_ALPHA`: Balance between vector/keyword (default: 0.5)
-
-## Performance Optimizations
-
-1. **Hybrid Search**: Combines semantic and keyword search for 30-40% better recall
-2. **Query Expansion**: Improves retrieval coverage by 20-25%
-3. **Reranking**: Increases precision@3 by 40-50%
-4. **Adaptive Chunking**: Optimizes chunk boundaries based on content type
-5. **Streaming**: Reduces perceived latency by 60%
-
-## Sample Documents
-
-The demo includes three comprehensive technical documents:
-- Web Performance Optimization Guide
-- Microservices Architecture Best Practices
-- Machine Learning in Production
-
-## Development
+### Local Development
 
 ```bash
-# Run in development mode
-npm run dev
+# Start all services
+docker-compose up -d
 
-# Build for production
-npm run build
+# View logs
+npm run docker:logs
 
+# Stop services
+npm run docker:down
+```
+
+### Production Deployment
+
+1. Use Qdrant Cloud for managed vector database
+2. Set `NODE_ENV=production`
+3. Configure proper API key management
+4. Implement rate limiting and authentication
+5. Use HTTPS for all endpoints
+
+See [SETUP.md](SETUP.md) for detailed deployment instructions.
+
+## 🧪 Testing & Development
+
+```bash
 # Run tests
 npm test
+
+# Check Qdrant health
+npm run qdrant:check
+
+# Reset vector database
+npm run qdrant:reset
+
+# View Qdrant dashboard
+open http://localhost:6333/dashboard
+
+# Bundle analysis
+ANALYZE=true npm run build
+```
+
+## 📈 Performance Optimizations
+
+| Optimization | Impact | Implementation |
+|-------------|---------|---------------|
+| Hybrid Search | +30-40% recall | Combines vector + keyword search |
+| Query Expansion | +20-25% coverage | Automatic synonym expansion |
+| Reranking | +40-50% precision@3 | Cohere cross-encoder |
+| Adaptive Chunking | Better context | Content-aware splitting |
+| Response Streaming | -60% perceived latency | SSE implementation |
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+**Qdrant Connection Failed**
+```bash
+# Check if running
+docker ps | grep qdrant
+
+# Restart
+npm run docker:down && npm run docker:up
+
+# Check health
+curl http://localhost:6333/readyz
+```
+
+**Low Relevance Scores**
+- Ensure documents are properly ingested: `npm run qdrant:check`
+- Try adjusting `HYBRID_SEARCH_ALPHA` (0.7 for more semantic)
+- Check if reranking is enabled
+
+**Slow Response Times**
+- Consider using GPT-3.5-turbo for faster responses
+- Reduce `TOP_K` for fewer documents
+- Enable response caching
+
+## 📚 Project Structure
+
+```
+.
+├── src/
+│   ├── server.ts           # Express server
+│   ├── lib/
+│   │   ├── ragPipeline.ts  # Core RAG logic
+│   │   ├── vectorStore.ts  # Qdrant integration
+│   │   ├── chunking.ts     # Document processing
+│   │   └── qdrant-init.ts  # Database setup
+│   └── ingestion/
+│       ├── ingest-files.ts # File ingestion
+│       └── ingest.ts       # Sample data
+├── documents/              # Your documents here
+├── public/
+│   └── index.html         # Web UI
+├── scripts/
+│   ├── setup-qdrant.sh    # Setup wizard
+│   └── check-qdrant.js    # Health check
+└── docker-compose.yml     # Container setup
 ```
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines and ideas.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## 📝 License
 
-MIT - See [LICENSE](LICENSE) for details
+MIT - See [LICENSE](LICENSE) for details.
 
 ## 🙏 Acknowledgments
 
-- Built with [LangChain](https://langchain.com/)
-- Vector search powered by [Qdrant](https://qdrant.tech/)
-- Reranking by [Cohere](https://cohere.ai/)
-- LLM by [OpenAI](https://openai.com/)
+- [LangChain](https://langchain.com/) for RAG framework
+- [Qdrant](https://qdrant.tech/) for vector search
+- [Cohere](https://cohere.ai/) for reranking
+- [OpenAI](https://openai.com/) for LLM and embeddings
+
+## 🚧 Roadmap
+
+- [ ] Multi-tenant support
+- [ ] Authentication & authorization
+- [ ] Conversation memory
+- [ ] Document update/delete APIs
+- [ ] Evaluation metrics dashboard
+- [ ] Fine-tuning support
+- [ ] Multi-language support
 
 ---
 
-**⭐ If you find this project useful, please consider giving it a star on GitHub!**
+**⭐ If you find this project useful, please star it on GitHub!**
+
+For detailed setup instructions, see [SETUP.md](SETUP.md)

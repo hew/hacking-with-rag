@@ -8,6 +8,15 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "ingest": "tsx src/ingestion/ingest.ts",
+    "ingest:files": "tsx src/ingestion/ingest-files.ts",
+    "ingest:sample": "tsx src/ingestion/ingest.ts",
+    "qdrant:setup": "./scripts/setup-qdrant.sh",
+    "qdrant:check": "node scripts/check-qdrant.js",
+    "qdrant:init": "tsx src/lib/qdrant-init.ts",
+    "qdrant:reset": "tsx src/lib/qdrant-init.ts --reset",
+    "docker:up": "docker-compose up -d qdrant",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f qdrant",
     "test": "vitest"
   },
   "dependencies": {

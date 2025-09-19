@@ -9,6 +9,7 @@ pnpm-debug.log*
 .env
 .env.local
 .env.*.local
+.env.bak
 
 # Build outputs
 dist/
@@ -45,4 +46,10 @@ temp/
 
 # Qdrant local data
 qdrant_data/
+qdrant_storage/
 storage/
+
+# User documents (keep examples)
+documents/*
+!documents/.gitkeep
+!documents/example-*.md
